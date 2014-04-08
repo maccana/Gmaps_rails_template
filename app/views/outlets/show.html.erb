@@ -1,0 +1,51 @@
+
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @outlet.name %>
+</p>
+
+<p>
+  <b>Category:</b>
+  <%= @outlet.category %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @outlet.description %>
+</p>
+
+<p>
+  <b>Address:</b>
+  <%= @outlet.address %>
+</p>
+
+<p>
+  <b>Phone:</b>
+  <%= @outlet.phone %>
+</p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @outlet.latitude %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @outlet.longitude %>
+</p>
+<%= gmaps4rails(@json) %>
+
+
+<% if can? :update, @outlet %>
+<%= link_to 'Edit', edit_outlet_path(@outlet) %> 
+<% end%>
+<% if can? :destroy, @outlet %>
+<td><%= link_to 'Destroy', outlet, :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>
+<% end %>
+
+<%= link_to 'Back', outlets_path %>
+
+

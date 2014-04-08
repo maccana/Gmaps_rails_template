@@ -1,0 +1,114 @@
+<%= form_for(@outlet) do |f| %>
+  <% if @outlet.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@outlet.errors.count, "error") %> prohibited this outlet from being saved:</h2>
+
+      <ul>
+      <% @outlet.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :category %><br />
+    <%= f.text_field :category %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </div>
+  <div class="field">
+    <%= f.label :phone %><br />
+    <%= f.text_field :phone %>
+  </div>
+  <div class="field">
+    <%= f.label :latitude %><br />
+    <%= f.text_field :latitude %>
+  </div>
+  <div class="field">
+    <%= f.label :longitude %><br />
+    <%= f.text_field :longitude %>
+  </div>
+
+<br/>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+<%= gmaps4rails(@json) %>
+
+
+<% content_for :scripts do %>
+<script type="text/javascript" charset="utf-8">
+   var markersArray = [];
+   
+   // On click, clear markers, place a new one, update coordinates in the form
+   Gmaps.map.callback = function() {
+       google.maps.event.addListener(Gmaps.map.serviceObject, 'click', function(event) {
+           clearOverlays();
+   //Gmaps4Rails.clear_markers(); //supposed to clear previous marker
+           placeMarker(event.latLng);
+   setFormLocation(event.latLng); //my attempt
+           updateFormLocation(event.latLng); // update
+       });
+   };
+   
+   
+   // Add a marker with an open infowindow
+   function placeMarker(latLng) {
+       var marker = new google.maps.Marker({
+           position: latLng,
+           map: Gmaps.map.serviceObject,
+           draggable: true // can this be set to false in the search result view?
+   
+       });
+   
+   
+   function setFormLocation(lagLng){
+   $("#outlet_latitude").val(latLng.lat());
+   $('#outlet_longitude').val(latLng.lng());
+   
+   }            // Update form attributes with given coordinates
+       function updateFormLocation(latLng) {
+           $("#outlet_latitude").val(latLng.lat());
+           $('#outlet_longitude').val(latLng.lng());
+          					      //$('#character_attributes_gmaps_zoom').val(Gmaps.map.serviceObject.getZoom());
+       }
+   
+       markersArray.push(marker);
+       // Set and open infowindow
+       var infowindow = new google.maps.InfoWindow({
+           content: '<div class="popup"><h2>Hello!</h2><p>Drag me and adjust the zoom level.</p>' // need to allow this to be set from a text field
+       });
+   
+       infowindow.open(Gmaps.map.serviceObject,marker);
+   
+       // Listen to drag & drop 
+       google.maps.event.addListener(marker, 'dragend', function() {
+   // map.setZoom(3);
+           updateFormLocation(this.getPosition());
+   //Gmaps4Rails.clear_markers();
+       });
+   }
+   
+   // Removes the overlays from the map
+   function clearOverlays() {
+       if (markersArray) {
+           for (var i = 0; i < markersArray.length; i++ ) {
+               markersArray[i].setMap(null);
+           }
+       }
+       markersArray.length = 0;
+   }
+</script>
+<% end %>

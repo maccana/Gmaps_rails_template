@@ -1,0 +1,64 @@
+<h1 xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+	 <h1>Listing Chars</h1>
+
+<%= form_tag characters_path, :method =>'Get' do %>
+<p>
+	<%= text_field_tag :search %>
+	<%= submit_tag "Search" %>
+	</p>
+	<% end %>
+
+
+<p>This page should be for admin only</p>
+
+<p>Type some keywords to search</p>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Address</th>
+    <th>Longitude</th>
+    <th>Latitude</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @characters.each do |character| %>
+  <tr>
+    <td><%= character.name %></td>
+    <td><%= character.address %></td>
+    <td><%= character.longitude %></td>
+    <td><%= character.latitude %></td>
+    
+
+    <td><%= link_to 'Show', character %></td>
+    <td><%= link_to 'Edit', edit_character_path(character) %></td>
+    <td><%= link_to 'Destroy', character, :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>
+
+  </tr>
+<% end %>
+</table>
+
+<ul id="markers_list">  </ul>
+
+<br />
+<hr>
+
+<%= link_to 'New Character', new_character_path %>
+<br/>
+<br/>
+
+
+
+
+<p>
+<%= @time %>
+</p>
+
+
+
+
+
+
+

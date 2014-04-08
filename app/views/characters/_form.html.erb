@@ -1,0 +1,100 @@
+<%= form_for(@character) do |f| %>
+<% if @character.errors.any? %>
+<div id="error_explanation" xmlns="http://www.w3.org/1999/html">
+   <h2><%= pluralize(@character.errors.count, "error") %> prohibited this character from being saved:</h2>
+   <ul>
+      <% @character.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+      <% end %>
+   </ul>
+</div>
+<% end %>
+<div class="field">
+   <%= f.label :Business_Name %><br />
+   <%= f.text_field :name ,  :placeholder=>"Enter your company name"%>
+</div>
+<div class="field">
+   <%= f.label :address %><br />
+   <%= f.text_field :address,  :placeholder=>"Enter your company address" %>
+</div>
+
+<div class="field">
+   <%= f.label :longitude %><br />
+   <%= f.text_field :longitude %>
+</div>
+<div class="field">
+   <%= f.label :latitude %><br />
+   <%= f.text_field :latitude %>
+</div>
+
+<div class="actions">
+   <%= f.submit %>
+</div>
+<% end %>
+<div>
+   <%= gmaps4rails(@json) %>
+</div>
+
+<% content_for :scripts do %>
+<script type="text/javascript" charset="utf-8">
+   var markersArray = [];
+   
+   // On click, clear markers, place a new one, update coordinates in the form
+   Gmaps.map.callback = function() {
+       google.maps.event.addListener(Gmaps.map.serviceObject, 'click', function(event) {
+           clearOverlays();
+   //Gmaps4Rails.clear_markers(); //supposed to clear previous marker
+           placeMarker(event.latLng);
+   setFormLocation(event.latLng); //my attempt
+           updateFormLocation(event.latLng); // update
+       });
+   };
+   
+   
+   // Add a marker with an open infowindow
+   function placeMarker(latLng) {
+       var marker = new google.maps.Marker({
+           position: latLng,
+           map: Gmaps.map.serviceObject,
+           draggable: true // can this be set to false in the search result view?
+   
+       });
+   
+   		function setFormLocation(lagLng){
+   		$("#character_latitude").val(latLng.lat());
+   		$('#character_longitude').val(latLng.lng());
+   
+   }            // Update form attributes with given coordinates
+       function updateFormLocation(latLng) {
+           $("#character_latitude").val(latLng.lat());
+           $('#character_longitude').val(latLng.lng());
+          					      //$('#character_attributes_gmaps_zoom').val(Gmaps.map.serviceObject.getZoom());
+       }
+   
+       markersArray.push(marker);
+       // Set and open infowindow
+       var infowindow = new google.maps.InfoWindow({
+           content: '<div class="popup"><h2>Hello!</h2><p>Drag me and adjust the zoom level.</p>' // need to allow this to be set from a text field
+       });
+   
+       infowindow.open(Gmaps.map.serviceObject,marker);
+   
+       // Listen to drag & drop 
+       google.maps.event.addListener(marker, 'dragend', function() {
+   // map.setZoom(3);
+           updateFormLocation(this.getPosition());
+   //Gmaps4Rails.clear_markers();
+       });
+   }
+   
+   // Removes the overlays from the map
+   function clearOverlays() {
+       if (markersArray) {
+           for (var i = 0; i < markersArray.length; i++ ) {
+               markersArray[i].setMap(null);
+           }
+       }
+       markersArray.length = 0;
+   }
+</script>
+<% end %>

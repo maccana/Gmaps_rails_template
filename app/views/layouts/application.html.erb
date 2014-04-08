@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Gmaps Student Discount Finder</title>
+	<%= stylesheet_link_tag    "application", :media => "all" %>
+	<%= javascript_include_tag "application" %>
+	
+	
+
+
+  <%= csrf_meta_tags %>
+  <%= yield :head %> 
+
+</head>
+<body>
+	<div class="container">
+		<%= image_tag("rails.png", :alt => "Sample App", :class => "round") %>
+	<h1>Student discount finder</h1> 
+	
+	<div id="navbar">
+		
+		<ul>
+			<li><%=link_to 'Sign up', user_path('new')%>
+			or
+			<%=link_to 'Log in', :sessions => :new %></li>
+			<li><%=link_to 'Log out', :sessions => :destroy %></li>
+			<li><%=link_to 'New Location', outlet_path('new')%></li>
+			<li><%=link_to 'Outlets', outlets_path %>
+			<li><%= link_to 'Characters', characters_path %></li>
+				
+				
+		</ul>
+	</div>
+			
+		<div>
+		<!--<p class="notice"><%= notice %></p> was duplicating notification from Restful Authentication-->
+		       <p class="alert"><%= alert %></p>
+	
+			<h2><%= flash[:notice] %></h2>
+			<%= yield %>
+	    </div>
+	</div>
+	
+		<div>
+		<%= yield :scripts %>
+		<h3>Copyright 2013</h3>
+	</div>
+	
+</body>	
+</html>
+
