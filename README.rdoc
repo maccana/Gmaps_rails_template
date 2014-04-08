@@ -6,3 +6,6 @@ Required fixes:
 - Gmaps upgrade 
 - Sign up/Log in 
 - Editing characters / outlets not working
+
+Current local project directory path
+~/desktop/Rails2/rp/gmap
